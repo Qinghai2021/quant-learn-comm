@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量化策略实盘记录 | 主页</title>
+    <style>
+        /* 保持原有样式不变 */
+        :root {
+            --bg-primary: #0d0f14;
+            --bg-card: #1a1d28;
+            --border-color: #2a2d3a;
+            --gold: #d4a853;
+            --gold-light: #f0d078;
+            --text-primary: #e8e8ec;
+            --text-secondary: #a0a3b5;
+            --text-muted: #6b6e80;
+            --green: #00c853;
+            --red: #ff3d4f;
+            --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            --font-sans: 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            --radius-lg: 14px;
+            --shadow-card: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at 30% 10%, rgba(212,168,83,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 90%, rgba(77,166,255,0.03) 0%, transparent 50%);
+        }
+        .header {
+            background: rgba(21,24,32,0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header p {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+        }
+        .strategy-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .strategy-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+        }
+        .strategy-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+        .strategy-desc {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+        }
+        .days-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            background: rgba(212,168,83,0.1);
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-bottom: 18px;
+            width: fit-content;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(212,168,83,0.25);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+        .stat-value {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .stat-value.green { color: var(--green); }
+        .stat-value.red { color: var(--red); }
+        .stat-value.gold { color: var(--gold-light); }
+        .view-btn {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            border-radius: 8px;
+            background: rgba(212,168,83,0.1);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+            margin-top: auto;
+        }
+        .view-btn:hover {
+            background: rgba(212,168,83,0.2);
+        }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+        .loading-message {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>📊 量化策略实盘记录</h1>
+        <p>多策略组合 · 透明化净值追踪</p>
+    </header>
+
+    <div class="container" id="cardsContainer">
+        <div class="loading-message">加载策略数据中...</div>
+    </div>
+
+    <div class="footer">
+        <p>数据更新于 <span id="updateDate">--</span> · 所有内容仅供学习参考，不构成投资建议</p>
+    </div>
+
+    <script>
+        (async function() {
+            const container = document.getElementById('cardsContainer');
+            const updateDateSpan = document.getElementById('updateDate');
+            
+            try {
+                const response = await fetch('./strategies.json');
+                if (!response.ok) throw new Error('无法加载策略数据');
+                const strategies = await response.json();
+                
+                // 清空容器
+                container.innerHTML = '';
+                
+                // 动态生成卡片
+                strategies.forEach(s => {
+                    const card = document.createElement('div');
+                    card.className = 'strategy-card';
+                    card.innerHTML = `
+                        <div class="strategy-name">${s.name}</div>
+                        <div class="strategy-desc">${s.description}</div>
+                        <div class="days-badge">🗓️ 实盘天数 ${s.days} 天</div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">收益率</span>
+                                <span class="stat-value green">${s.returnRate}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">夏普比率</span>
+                                <span class="stat-value green">${s.sharpe}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">最大回撤</span>
+                                <span class="stat-value red">${s.drawdown}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">胜率</span>
+                                <span class="stat-value green">${s.winRate}</span>
+                            </div>
+                        </div>
+                        <a href="${s.page}" class="view-btn">查看实盘详情 →</a>
+                    `;
+                    container.appendChild(card);
+                });
+
+                // 更新日期（假设取第一个策略的快照日期，可在 JSON 中增加 updateDate 字段）
+                // 这里简单展示当前年份
+                updateDateSpan.textContent = new Date().toISOString().split('T')[0];
+            } catch (error) {
+                container.innerHTML = '<div class="loading-message">策略数据加载失败，请检查 strategies.json 文件</div>';
+                console.error(error);
+            }
+        })();
+    </script>
+</body>
+</html>

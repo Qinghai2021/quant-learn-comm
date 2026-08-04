@@ -1,0 +1,24 @@
+[
+    {
+        "id": "strategy1",
+        "name": "Aurora Gold",
+        "description": "趋势跟踪 · 黄金1小时周期 · 多因子共振",
+        "days": 486,
+        "returnRate": "+38.53%",
+        "sharpe": 1.82,
+        "drawdown": "-7.85%",
+        "winRate": "66.7%",
+        "page": "strategy1.html"
+    },
+    {
+        "id": "strategy2",
+        "name": "Grid Master",
+        "description": "网格交易 · EURUSD 30分钟 · 低波动套利",
+        "days": 312,
+        "returnRate": "+15.20%",
+        "sharpe": 2.15,
+        "drawdown": "-3.40%",
+        "winRate": "82.1%",
+        "page": "strategy2.html"
+    }
+]

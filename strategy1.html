@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Gold · 实盘记录</title>
+    <style>
+        /* 保持原有黑金样式完整 */
+        :root {
+            --bg-primary: #0d0f14;
+            --bg-card: #1a1d28;
+            --border-color: #2a2d3a;
+            --gold: #d4a853;
+            --gold-light: #f0d078;
+            --gold-dark: #b8861e;
+            --text-primary: #e8e8ec;
+            --text-secondary: #a0a3b5;
+            --text-muted: #6b6e80;
+            --green: #00c853;
+            --green-bg: rgba(0,200,83,0.12);
+            --red: #ff3d4f;
+            --red-bg: rgba(255,61,79,0.12);
+            --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+            --font-sans: 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            --radius: 10px;
+            --radius-lg: 14px;
+            --shadow-card: 0 2px 12px rgba(0,0,0,0.3);
+            --shadow-glow-gold: 0 0 20px rgba(212,168,83,0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            background-image:
+                radial-gradient(ellipse at 20% 20%, rgba(212,168,83,0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(77,166,255,0.02) 0%, transparent 50%);
+        }
+
+        .top-bar {
+            background: rgba(21,24,32,0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .back-link {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .strategy-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .strategy-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .days-badge {
+            background: rgba(212,168,83,0.1);
+            color: var(--gold-light);
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.78rem;
+            border: 1px solid rgba(212,168,83,0.25);
+        }
+
+        .main-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto auto;
+            gap: 16px;
+        }
+
+        .price-strip {
+            grid-column: 1 / -1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: var(--shadow-card);
+        }
+        .price-main { display: flex; align-items: baseline; gap: 12px; }
+        .price-symbol { font-weight: 700; font-size: 1.1rem; color: var(--gold); letter-spacing: 1px; }
+        .price-bid {
+            font-size: 2rem; font-weight: 700; font-family: var(--font-mono);
+            color: #fff; letter-spacing: -0.5px;
+        }
+        .price-change {
+            font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600;
+            padding: 4px 10px; border-radius: 20px;
+            background: var(--green-bg); color: var(--green);
+        }
+        .price-details { display: flex; gap: 24px; font-size: 0.82rem; color: var(--text-secondary); }
+        .price-details span { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .price-details .label {
+            font-size: 0.7rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.8px;
+        }
+        .price-details .val { font-family: var(--font-mono); color: var(--text-primary); font-weight: 500; }
+
+        .metrics-row {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+        }
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            box-shadow: var(--shadow-card);
+            transition: border-color 0.2s;
+        }
+        .metric-card:hover { border-color: #3a3d50; }
+        .metric-label {
+            font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--text-muted); font-weight: 600;
+        }
+        .metric-value {
+            font-size: 1.55rem; font-weight: 700; font-family: var(--font-mono);
+            letter-spacing: -0.3px;
+        }
+        .metric-value.green { color: var(--green); }
+        .metric-value.red { color: var(--red); }
+        .metric-value.gold { color: var(--gold-light); }
+        .metric-sub { font-size: 0.72rem; color: var(--text-secondary); font-weight: 400; }
+
+        .chart-section {
+            grid-column: 1 / 3;
+            grid-row: 3 / 5;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-card);
+            display: flex; flex-direction: column;
+        }
+        .chart-container { flex: 1; position: relative; min-height: 320px; }
+        .chart-container canvas { width: 100%; height: 100%; display: block; }
+        .chart-tooltip {
+            display: none; position: absolute;
+            background: #1f2235; border: 1px solid #3a3d55;
+            border-radius: 6px; padding: 8px 12px;
+            font-family: var(--font-mono); font-size: 0.75rem;
+            color: #fff; pointer-events: none;
+            z-index: 10; box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        }
+
+        .trade-log-section {
+            grid-column: 3;
+            grid-row: 3 / 5;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        .trade-table-wrap {
+            flex:1; overflow-y: auto;
+            scrollbar-width: thin; scrollbar-color: #2a2d3a transparent;
+        }
+        .trade-table-wrap::-webkit-scrollbar { width: 4px; }
+        .trade-table-wrap::-webkit-scrollbar-track { background: transparent; }
+        .trade-table-wrap::-webkit-scrollbar-thumb { background: #2a2d3a; border-radius: 4px; }
+        table.trade-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 0.75rem; font-family: var(--font-mono);
+        }
+        table.trade-table th {
+            text-align: left; padding: 8px 10px; color: var(--text-muted);
+            font-weight: 600; font-size: 0.68rem; letter-spacing: 0.5px;
+            text-transform: uppercase; border-bottom: 1px solid var(--border-color);
+            position: sticky; top: 0; background: var(--bg-card); z-index: 2;
+        }
+        table.trade-table td {
+            padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: var(--text-secondary); white-space: nowrap;
+        }
+        table.trade-table tr:hover td { background: rgba(255,255,255,0.015); color: #fff; }
+        .trade-pnl { font-weight: 700; }
+        .trade-pnl.win { color: var(--green); }
+        .trade-pnl.loss { color: var(--red); }
+        .trade-dir { font-weight: 700; letter-spacing: 0.3px; }
+        .trade-dir.long { color: #00e676; }
+        .trade-dir.short { color: #ff5252; }
+
+        .card-header { margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .card-title {
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.9px;
+            color: var(--text-muted); font-weight: 600;
+        }
+        .card-badge {
+            font-size: 0.7rem; padding: 3px 9px; border-radius: 12px;
+            font-weight: 600; letter-spacing: 0.4px;
+            background: var(--green-bg); color: var(--green);
+        }
+
+        .last-update-note {
+            font-size: 0.7rem; color: var(--text-muted);
+            margin-bottom: 10px; text-align: right;
+        }
+
+        @media (max-width: 1200px) {
+            .main-container { grid-template-columns: 1fr 1fr; }
+            .metrics-row { grid-template-columns: repeat(3,1fr); }
+            .chart-section { grid-column: 1 / -1; }
+            .trade-log-section { grid-column: 1 / -1; }
+        }
+        @media (max-width: 768px) {
+            .main-container { grid-template-columns: 1fr; padding: 10px; gap: 10px; }
+            .metrics-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .price-strip { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .price-bid { font-size: 1.5rem; }
+            .price-details { gap: 12px; }
+            .chart-section { grid-column: 1; min-height: 250px; }
+            .trade-log-section { grid-column: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="index.html" class="back-link">← 返回策略列表</a>
+        <span class="strategy-title" id="strategyName">Aurora Gold · XAUUSD 趋势跟踪</span>
+        <div class="strategy-meta">
+            <span class="days-badge" id="daysBadge">🗓️ 实盘 -- 天</span>
+            <span id="snapshotLabel">数据快照 --</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- 行情快照 -->
+        <div class="price-strip">
+            <div class="price-main">
+                <span class="price-symbol" id="symbolDisplay">XAU/USD</span>
+                <span class="price-bid" id="priceDisplay">--</span>
+                <span class="price-change" id="changeDisplay">--</span>
+            </div>
+            <div class="price-details">
+                <span><span class="label">最高</span><span class="val" id="highDisplay">--</span></span>
+                <span><span class="label">最低</span><span class="val" id="lowDisplay">--</span></span>
+                <span><span class="label">点差</span><span class="val" id="spreadDisplay">--</span></span>
+            </div>
+        </div>
+
+        <!-- 绩效指标 -->
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="metric-label">账户净值</div>
+                <div class="metric-value gold" id="equityDisplay">--</div>
+                <div class="metric-sub" id="initialCapitalDisplay">初始 $10,000</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">总收益率</div>
+                <div class="metric-value green" id="totalReturnDisplay">--</div>
+                <div class="metric-sub" id="annualReturnDisplay">年化 --</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">胜率</div>
+                <div class="metric-value green" id="winRateDisplay">--</div>
+                <div class="metric-sub" id="winLossDisplay">--赢 / --亏</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">夏普比率</div>
+                <div class="metric-value green" id="sharpeDisplay">--</div>
+                <div class="metric-sub" id="sortinoDisplay">索提诺 --</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">最大回撤</div>
+                <div class="metric-value red" id="drawdownDisplay">--</div>
+                <div class="metric-sub" id="recoveryDisplay">恢复天数 --</div>
+            </div>
+        </div>
+
+        <!-- 资金曲线 -->
+        <div class="chart-section">
+            <div class="card-header">
+                <span class="card-title">📈 资金曲线 (全周期)</span>
+                <span class="card-badge">实盘+回测</span>
+            </div>
+            <div class="chart-container" id="chartContainer">
+                <canvas id="equityCanvas"></canvas>
+                <div class="chart-tooltip" id="chartTooltip"></div>
+            </div>
+        </div>
+
+        <!-- 交易记录 -->
+        <div class="trade-log-section">
+            <div class="card-header">
+                <span class="card-title">📋 最近成交</span>
+                <span class="card-badge" id="tradeCountBadge">-- 笔</span>
+            </div>
+            <div class="last-update-note">仅展示最近订单，整体统计为全周期</div>
+            <div class="trade-table-wrap">
+                <table class="trade-table">
+                    <thead><tr><th>时间</th><th>方向</th><th>手数</th><th>开仓</th><th>平仓</th><th>盈亏</th></tr></thead>
+                    <tbody id="tradeBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (async function() {
+            // 尝试从 URL 参数获取数据文件，默认为 strategy1-data.json
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataFile = urlParams.get('data') || 'strategy1-data.json';
+            
+            try {
+                const response = await fetch(dataFile);
+                if (!response.ok) throw new Error('数据文件加载失败');
+                const data = await response.json();
+
+                // 更新页面标题
+                document.title = data.symbol ? `${data.symbol} · 实盘记录` : '策略实盘记录';
+                
+                // 顶部信息
+                document.getElementById('strategyName').textContent = 
+                    `Aurora Gold · ${data.symbol || 'XAUUSD'} 趋势跟踪`;
+                document.getElementById('daysBadge').textContent = `🗓️ 实盘 ${data.days || '--'} 天`;
+                document.getElementById('snapshotLabel').textContent = `数据快照 ${data.snapshotDate || '--'}`;
+                
+                // 行情快照
+                document.getElementById('symbolDisplay').textContent = data.symbol || '--';
+                document.getElementById('priceDisplay').textContent = data.price ? data.price.toLocaleString('en-US', {minimumFractionDigits:2}) : '--';
+                document.getElementById('changeDisplay').textContent = data.change || '--';
+                document.getElementById('highDisplay').textContent = data.high ? data.high.toLocaleString('en-US', {minimumFractionDigits:2}) : '--';
+                document.getElementById('lowDisplay').textContent = data.low ? data.low.toLocaleString('en-US', {minimumFractionDigits:2}) : '--';
+                document.getElementById('spreadDisplay').textContent = data.spread || '--';
+                
+                // 绩效指标
+                document.getElementById('equityDisplay').textContent = data.equity ? '$' + data.equity.toLocaleString('en-US', {minimumFractionDigits:2}) : '--';
+                document.getElementById('initialCapitalDisplay').textContent = `初始 $${(data.initialCapital || 10000).toLocaleString()}`;
+                document.getElementById('totalReturnDisplay').textContent = data.totalReturn || '--';
+                document.getElementById('annualReturnDisplay').textContent = `年化 ${data.annualReturn || '--'}`;
+                document.getElementById('winRateDisplay').textContent = data.winRate || '--';
+                document.getElementById('winLossDisplay').textContent = `${data.wins || 0}赢 / ${data.losses || 0}亏`;
+                document.getElementById('sharpeDisplay').textContent = data.sharpe || '--';
+                document.getElementById('sortinoDisplay').textContent = `索提诺 ${data.sortino || '--'}`;
+                document.getElementById('drawdownDisplay').textContent = data.maxDrawdown || '--';
+                document.getElementById('recoveryDisplay').textContent = `恢复天数 ${data.recoveryDays || '--'}`;
+                
+                // 交易记录
+                const trades = data.trades || [];
+                document.getElementById('tradeCountBadge').textContent = `${trades.length} 笔`;
+                const tbody = document.getElementById('tradeBody');
+                let html = '';
+                trades.forEach(t => {
+                    const dirClass = t.direction === 'long' ? 'long' : 'short';
+                    const pnlClass = t.pnl >= 0 ? 'win' : 'loss';
+                    const dirLabel = t.direction === 'long' ? '多' : '空';
+                    const pnlSign = t.pnl >= 0 ? '+' : '';
+                    html += `<tr>
+                        <td>${t.time}</td>
+                        <td class="trade-dir ${dirClass}">${dirLabel}</td>
+                        <td>${t.lots.toFixed(1)}</td>
+                        <td>$${t.open.toFixed(2)}</td>
+                        <td>$${t.close.toFixed(2)}</td>
+                        <td class="trade-pnl ${pnlClass}">${pnlSign}$${Math.abs(t.pnl).toFixed(2)}</td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+                
+                // 资金曲线
+                const curveData = data.equityCurve;
+                if (curveData) {
+                    initChart(curveData);
+                }
+            } catch (error) {
+                console.error(error);
+                // 显示错误提示
+                document.getElementById('priceDisplay').textContent = '加载失败';
+                document.getElementById('tradeBody').innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">数据加载失败，请检查 JSON 文件</td></tr>';
+            }
+        })();
+
+        function initChart(curveConfig) {
+            const points = curveConfig.points || 62;
+            const initial = curveConfig.initial || 10000;
+            const finalEquity = curveConfig.final || 13852.60;
+            let equityData = curveConfig.data && curveConfig.data.length ? curveConfig.data : generateEquityData(points, initial, finalEquity);
+            
+            const canvas = document.getElementById('equityCanvas');
+            const tooltip = document.getElementById('chartTooltip');
+            const container = document.getElementById('chartContainer');
+            let W, H;
+
+            function generateEquityData(p, init, final) {
+                const arr = [];
+                const drift = Math.log(final / init) / p;
+                const start = new Date(curveConfig.startDate || '2024-04-15');
+                for (let i = 0; i <= p; i++) {
+                    const d = new Date(start);
+                    d.setDate(d.getDate() + Math.round(i * 2.4));
+                    if (i === 0) arr.push({ date: d, equity: init });
+                    else if (i === p) arr.push({ date: d, equity: final });
+                    else {
+                        const prev = arr[i - 1].equity;
+                        let eq = prev + drift * prev + (Math.random() - 0.45) * 0.025 * prev;
+                        eq = Math.max(init * 0.88, eq);
+                        arr.push({ date: d, equity: Math.round(eq * 100) / 100 });
+                    }
+                }
+                arr[p].equity = final;
+                return arr;
+            }
+
+            function resize() {
+                const rect = container.getBoundingClientRect();
+                W = rect.width;
+                H = rect.height;
+                canvas.width = W * 2;
+                canvas.height = H * 2;
+                canvas.style.width = W + 'px';
+                canvas.style.height = H + 'px';
+                draw();
+            }
+
+            function draw(hx = null) {
+                const ctx = canvas.getContext('2d');
+                ctx.save();
+                ctx.setTransform(2, 0, 0, 2, 0, 0);
+
+                const pad = { top: 25, right: 30, bottom: 45, left: 70 };
+                const pw = W - pad.left - pad.right;
+                const ph = H - pad.top - pad.bottom;
+
+                let minVal = Infinity, maxVal = -Infinity;
+                equityData.forEach(d => {
+                    if (d.equity < minVal) minVal = d.equity;
+                    if (d.equity > maxVal) maxVal = d.equity;
+                });
+                const range = maxVal - minVal;
+                minVal -= range * 0.08;
+                maxVal += range * 0.12;
+                const valRange = maxVal - minVal;
+
+                const xs = i => pad.left + (i / points) * pw;
+                const ys = v => pad.top + ph - ((v - minVal) / valRange) * ph;
+
+                ctx.clearRect(0, 0, W, H);
+
+                // 网格
+                ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+                ctx.lineWidth = 0.8;
+                const gridLines = 6;
+                ctx.fillStyle = '#6b6e80';
+                ctx.font = '10px "SF Mono", "Consolas", monospace';
+                ctx.textAlign = 'right';
+                for (let g = 0; g <= gridLines; g++) {
+                    const y = pad.top + (g / gridLines) * ph;
+                    ctx.beginPath();
+                    ctx.moveTo(pad.left, y);
+                    ctx.lineTo(W - pad.right, y);
+                    ctx.stroke();
+                    const val = maxVal - (g / gridLines) * valRange;
+                    ctx.fillText('$' + Math.round(val).toLocaleString(), pad.left - 10, y + 4);
+                }
+
+                // X轴日期
+                const xLabelIndices = [0, 15, 30, 45, 60];
+                ctx.fillStyle = '#6b6e80';
+                ctx.font = '9px "SF Mono", "Consolas", monospace';
+                ctx.textAlign = 'center';
+                xLabelIndices.forEach(i => {
+                    if (i <= points) {
+                        const x = xs(i);
+                        const d = equityData[Math.min(i, points)].date;
+                        const label = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear().toString().slice(2);
+                        ctx.fillText(label, x, H - pad.bottom + 18);
+                    }
+                });
+
+                // 初始资金线
+                const initY = ys(initial);
+                ctx.setLineDash([4, 8]);
+                ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                ctx.lineWidth = 0.7;
+                ctx.beginPath();
+                ctx.moveTo(pad.left, initY);
+                ctx.lineTo(W - pad.right, initY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = '#6b6e80';
+                ctx.font = '9px "SF Mono", "Consolas", monospace';
+                ctx.textAlign = 'left';
+                ctx.fillText('初始 $' + initial.toLocaleString(), W - pad.right - 70, initY - 6);
+
+                // 渐变填充
+                const gradient = ctx.createLinearGradient(0, pad.top, 0, pad.top + ph);
+                gradient.addColorStop(0, 'rgba(0,200,83,0.22)');
+                gradient.addColorStop(0.5, 'rgba(0,200,83,0.06)');
+                gradient.addColorStop(1, 'rgba(0,200,83,0.0)');
+                ctx.beginPath();
+                ctx.moveTo(xs(0), ys(equityData[0].equity));
+                for (let i = 1; i <= points; i++) {
+                    ctx.lineTo(xs(i), ys(equityData[i].equity));
+                }
+                ctx.lineTo(xs(points), pad.top + ph);
+                ctx.lineTo(xs(0), pad.top + ph);
+                ctx.closePath();
+                ctx.fillStyle = gradient;
+                ctx.fill();
+
+                // 曲线
+                ctx.beginPath();
+                ctx.moveTo(xs(0), ys(equityData[0].equity));
+                for (let i = 1; i <= points; i++) {
+                    ctx.lineTo(xs(i), ys(equityData[i].equity));
+                }
+                ctx.strokeStyle = '#00e676';
+                ctx.lineWidth = 2.2;
+                ctx.shadowColor = 'rgba(0,230,118,0.5)';
+                ctx.shadowBlur = 8;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                // 终点
+                const lastX = xs(points);
+                const lastY = ys(equityData[points].equity);
+                ctx.beginPath(); ctx.arc(lastX, lastY, 5, 0, Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
+                ctx.beginPath(); ctx.arc(lastX, lastY, 8, 0, Math.PI*2); ctx.fillStyle = 'rgba(0,230,118,0.35)'; ctx.fill();
+                ctx.beginPath(); ctx.arc(lastX, lastY, 3, 0, Math.PI*2); ctx.fillStyle = '#00e676'; ctx.fill();
+
+                if (hx !== null && hx >= pad.left && hx <= W - pad.right) {
+                    const idx = Math.round((hx - pad.left) / pw * points);
+                    const clamped = Math.max(0, Math.min(points, idx));
+                    const cx = xs(clamped);
+                    const cy = ys(equityData[clamped].equity);
+                    ctx.setLineDash([3, 5]);
+                    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+                    ctx.lineWidth = 0.8;
+                    ctx.beginPath(); ctx.moveTo(cx, pad.top); ctx.lineTo(cx, pad.top+ph); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(pad.left, cy); ctx.lineTo(W-pad.right, cy); ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
+                    ctx.strokeStyle = '#00e676'; ctx.lineWidth = 2; ctx.stroke();
+                }
+                ctx.restore();
+            }
+
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mx = e.clientX - rect.left;
+                const my = e.clientY - rect.top;
+                const pad = { left: 70, right: 30 };
+                const pw = W - pad.left - pad.right;
+                if (mx >= pad.left && mx <= W - pad.right) {
+                    const idx = Math.round((mx - pad.left) / pw * points);
+                    const clamped = Math.max(0, Math.min(points, idx));
+                    const d = equityData[clamped];
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = (mx + 16) + 'px';
+                    tooltip.style.top = (my - 40) + 'px';
+                    tooltip.innerHTML = `<strong>${(d.date.getMonth()+1)}/${d.date.getDate()}/${d.date.getFullYear()}</strong><br>净值: $${d.equity.toLocaleString('en-US',{minimumFractionDigits:2})}`;
+                    draw(mx);
+                } else {
+                    tooltip.style.display = 'none';
+                    draw(null);
+                }
+            });
+            canvas.addEventListener('mouseleave', () => {
+                tooltip.style.display = 'none';
+                draw(null);
+            });
+            window.addEventListener('resize', resize);
+            resize();
+        }
+    </script>
+</body>
+</html>
