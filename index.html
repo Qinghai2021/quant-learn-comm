@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>量化策略实盘记录 | 主页</title>
     <style>
-        /* 保持原有样式不变 */
         :root {
             --bg-primary: #0d0f14;
             --bg-card: #1a1d28;
@@ -105,10 +104,7 @@
             gap: 12px;
             margin-bottom: 20px;
         }
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-        }
+        .stat-item { display: flex; flex-direction: column; }
         .stat-label {
             font-size: 0.65rem;
             text-transform: uppercase;
@@ -123,7 +119,6 @@
         }
         .stat-value.green { color: var(--green); }
         .stat-value.red { color: var(--red); }
-        .stat-value.gold { color: var(--gold-light); }
         .view-btn {
             display: inline-block;
             width: 100%;
@@ -140,9 +135,7 @@
             transition: background 0.2s;
             margin-top: auto;
         }
-        .view-btn:hover {
-            background: rgba(212,168,83,0.2);
-        }
+        .view-btn:hover { background: rgba(212,168,83,0.2); }
         .footer {
             text-align: center;
             padding: 30px;
@@ -183,10 +176,8 @@
                 if (!response.ok) throw new Error('无法加载策略数据');
                 const strategies = await response.json();
                 
-                // 清空容器
                 container.innerHTML = '';
                 
-                // 动态生成卡片
                 strategies.forEach(s => {
                     const card = document.createElement('div');
                     card.className = 'strategy-card';
@@ -217,8 +208,7 @@
                     container.appendChild(card);
                 });
 
-                // 更新日期（假设取第一个策略的快照日期，可在 JSON 中增加 updateDate 字段）
-                // 这里简单展示当前年份
+                // 尝试从第一个策略的快照日期获取更新日期（可在strategies.json中添加updateDate字段）
                 updateDateSpan.textContent = new Date().toISOString().split('T')[0];
             } catch (error) {
                 container.innerHTML = '<div class="loading-message">策略数据加载失败，请检查 strategies.json 文件</div>';

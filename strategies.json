@@ -8,7 +8,7 @@
         "sharpe": 1.82,
         "drawdown": "-7.85%",
         "winRate": "66.7%",
-        "page": "strategy1.html"
+        "page": "strategy1.html?data=strategy1-data.json"
     },
     {
         "id": "strategy2",
@@ -19,6 +19,6 @@
         "sharpe": 2.15,
         "drawdown": "-3.40%",
         "winRate": "82.1%",
-        "page": "strategy2.html"
+        "page": "strategy1.html?data=strategy2-data.json"
     }
 ]

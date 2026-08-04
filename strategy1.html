@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aurora Gold · 实盘记录</title>
+    <title>策略实盘记录</title>
     <style>
-        /* 保持原有黑金样式完整 */
         :root {
             --bg-primary: #0d0f14;
             --bg-card: #1a1d28;
             --border-color: #2a2d3a;
             --gold: #d4a853;
             --gold-light: #f0d078;
-            --gold-dark: #b8861e;
             --text-primary: #e8e8ec;
             --text-secondary: #a0a3b5;
             --text-muted: #6b6e80;
@@ -25,7 +23,6 @@
             --radius: 10px;
             --radius-lg: 14px;
             --shadow-card: 0 2px 12px rgba(0,0,0,0.3);
-            --shadow-glow-gold: 0 0 20px rgba(212,168,83,0.15);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -250,7 +247,7 @@
 <body>
     <div class="top-bar">
         <a href="index.html" class="back-link">← 返回策略列表</a>
-        <span class="strategy-title" id="strategyName">Aurora Gold · XAUUSD 趋势跟踪</span>
+        <span class="strategy-title" id="strategyName">加载中...</span>
         <div class="strategy-meta">
             <span class="days-badge" id="daysBadge">🗓️ 实盘 -- 天</span>
             <span id="snapshotLabel">数据快照 --</span>
@@ -258,10 +255,9 @@
     </div>
 
     <div class="main-container">
-        <!-- 行情快照 -->
         <div class="price-strip">
             <div class="price-main">
-                <span class="price-symbol" id="symbolDisplay">XAU/USD</span>
+                <span class="price-symbol" id="symbolDisplay">--</span>
                 <span class="price-bid" id="priceDisplay">--</span>
                 <span class="price-change" id="changeDisplay">--</span>
             </div>
@@ -272,12 +268,11 @@
             </div>
         </div>
 
-        <!-- 绩效指标 -->
         <div class="metrics-row">
             <div class="metric-card">
                 <div class="metric-label">账户净值</div>
                 <div class="metric-value gold" id="equityDisplay">--</div>
-                <div class="metric-sub" id="initialCapitalDisplay">初始 $10,000</div>
+                <div class="metric-sub" id="initialCapitalDisplay">初始 $--</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">总收益率</div>
@@ -301,7 +296,6 @@
             </div>
         </div>
 
-        <!-- 资金曲线 -->
         <div class="chart-section">
             <div class="card-header">
                 <span class="card-title">📈 资金曲线 (全周期)</span>
@@ -313,7 +307,6 @@
             </div>
         </div>
 
-        <!-- 交易记录 -->
         <div class="trade-log-section">
             <div class="card-header">
                 <span class="card-title">📋 最近成交</span>
@@ -331,35 +324,28 @@
 
     <script>
         (async function() {
-            // 尝试从 URL 参数获取数据文件，默认为 strategy1-data.json
             const urlParams = new URLSearchParams(window.location.search);
             const dataFile = urlParams.get('data') || 'strategy1-data.json';
-            
+
             try {
                 const response = await fetch(dataFile);
                 if (!response.ok) throw new Error('数据文件加载失败');
                 const data = await response.json();
 
-                // 更新页面标题
                 document.title = data.symbol ? `${data.symbol} · 实盘记录` : '策略实盘记录';
-                
-                // 顶部信息
-                document.getElementById('strategyName').textContent = 
-                    `Aurora Gold · ${data.symbol || 'XAUUSD'} 趋势跟踪`;
+                document.getElementById('strategyName').textContent = `Aurora Gold · ${data.symbol || 'XAUUSD'} 趋势跟踪`;
                 document.getElementById('daysBadge').textContent = `🗓️ 实盘 ${data.days || '--'} 天`;
                 document.getElementById('snapshotLabel').textContent = `数据快照 ${data.snapshotDate || '--'}`;
-                
-                // 行情快照
+
                 document.getElementById('symbolDisplay').textContent = data.symbol || '--';
                 document.getElementById('priceDisplay').textContent = data.price ? data.price.toLocaleString('en-US', {minimumFractionDigits:2}) : '--';
                 document.getElementById('changeDisplay').textContent = data.change || '--';
                 document.getElementById('highDisplay').textContent = data.high ? data.high.toLocaleString('en-US', {minimumFractionDigits:2}) : '--';
                 document.getElementById('lowDisplay').textContent = data.low ? data.low.toLocaleString('en-US', {minimumFractionDigits:2}) : '--';
                 document.getElementById('spreadDisplay').textContent = data.spread || '--';
-                
-                // 绩效指标
+
                 document.getElementById('equityDisplay').textContent = data.equity ? '$' + data.equity.toLocaleString('en-US', {minimumFractionDigits:2}) : '--';
-                document.getElementById('initialCapitalDisplay').textContent = `初始 $${(data.initialCapital || 10000).toLocaleString()}`;
+                document.getElementById('initialCapitalDisplay').textContent = `初始 $${(data.initialCapital || 0).toLocaleString()}`;
                 document.getElementById('totalReturnDisplay').textContent = data.totalReturn || '--';
                 document.getElementById('annualReturnDisplay').textContent = `年化 ${data.annualReturn || '--'}`;
                 document.getElementById('winRateDisplay').textContent = data.winRate || '--';
@@ -368,8 +354,7 @@
                 document.getElementById('sortinoDisplay').textContent = `索提诺 ${data.sortino || '--'}`;
                 document.getElementById('drawdownDisplay').textContent = data.maxDrawdown || '--';
                 document.getElementById('recoveryDisplay').textContent = `恢复天数 ${data.recoveryDays || '--'}`;
-                
-                // 交易记录
+
                 const trades = data.trades || [];
                 document.getElementById('tradeCountBadge').textContent = `${trades.length} 笔`;
                 const tbody = document.getElementById('tradeBody');
@@ -389,15 +374,12 @@
                     </tr>`;
                 });
                 tbody.innerHTML = html;
-                
-                // 资金曲线
-                const curveData = data.equityCurve;
-                if (curveData) {
-                    initChart(curveData);
+
+                if (data.equityCurve) {
+                    initChart(data.equityCurve);
                 }
             } catch (error) {
                 console.error(error);
-                // 显示错误提示
                 document.getElementById('priceDisplay').textContent = '加载失败';
                 document.getElementById('tradeBody').innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">数据加载失败，请检查 JSON 文件</td></tr>';
             }
@@ -407,32 +389,12 @@
             const points = curveConfig.points || 62;
             const initial = curveConfig.initial || 10000;
             const finalEquity = curveConfig.final || 13852.60;
-            let equityData = curveConfig.data && curveConfig.data.length ? curveConfig.data : generateEquityData(points, initial, finalEquity);
-            
+            let equityData = curveConfig.data && curveConfig.data.length ? curveConfig.data : [];
+
             const canvas = document.getElementById('equityCanvas');
             const tooltip = document.getElementById('chartTooltip');
             const container = document.getElementById('chartContainer');
             let W, H;
-
-            function generateEquityData(p, init, final) {
-                const arr = [];
-                const drift = Math.log(final / init) / p;
-                const start = new Date(curveConfig.startDate || '2024-04-15');
-                for (let i = 0; i <= p; i++) {
-                    const d = new Date(start);
-                    d.setDate(d.getDate() + Math.round(i * 2.4));
-                    if (i === 0) arr.push({ date: d, equity: init });
-                    else if (i === p) arr.push({ date: d, equity: final });
-                    else {
-                        const prev = arr[i - 1].equity;
-                        let eq = prev + drift * prev + (Math.random() - 0.45) * 0.025 * prev;
-                        eq = Math.max(init * 0.88, eq);
-                        arr.push({ date: d, equity: Math.round(eq * 100) / 100 });
-                    }
-                }
-                arr[p].equity = final;
-                return arr;
-            }
 
             function resize() {
                 const rect = container.getBoundingClientRect();
@@ -464,7 +426,7 @@
                 maxVal += range * 0.12;
                 const valRange = maxVal - minVal;
 
-                const xs = i => pad.left + (i / points) * pw;
+                const xs = i => pad.left + (i / (equityData.length - 1)) * pw;
                 const ys = v => pad.top + ph - ((v - minVal) / valRange) * ph;
 
                 ctx.clearRect(0, 0, W, H);
@@ -487,16 +449,17 @@
                 }
 
                 // X轴日期
-                const xLabelIndices = [0, 15, 30, 45, 60];
+                const step = Math.floor(equityData.length / 5);
+                const xLabelIndices = [0, step, step*2, step*3, equityData.length-1];
                 ctx.fillStyle = '#6b6e80';
                 ctx.font = '9px "SF Mono", "Consolas", monospace';
                 ctx.textAlign = 'center';
                 xLabelIndices.forEach(i => {
-                    if (i <= points) {
+                    if (i < equityData.length) {
                         const x = xs(i);
-                        const d = equityData[Math.min(i, points)].date;
-                        const label = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear().toString().slice(2);
-                        ctx.fillText(label, x, H - pad.bottom + 18);
+                        const d = equityData[i];
+                        const dateStr = d.date ? d.date.slice(5) : ''; // MM-DD
+                        ctx.fillText(dateStr, x, H - pad.bottom + 18);
                     }
                 });
 
@@ -522,10 +485,10 @@
                 gradient.addColorStop(1, 'rgba(0,200,83,0.0)');
                 ctx.beginPath();
                 ctx.moveTo(xs(0), ys(equityData[0].equity));
-                for (let i = 1; i <= points; i++) {
+                for (let i = 1; i < equityData.length; i++) {
                     ctx.lineTo(xs(i), ys(equityData[i].equity));
                 }
-                ctx.lineTo(xs(points), pad.top + ph);
+                ctx.lineTo(xs(equityData.length-1), pad.top + ph);
                 ctx.lineTo(xs(0), pad.top + ph);
                 ctx.closePath();
                 ctx.fillStyle = gradient;
@@ -534,7 +497,7 @@
                 // 曲线
                 ctx.beginPath();
                 ctx.moveTo(xs(0), ys(equityData[0].equity));
-                for (let i = 1; i <= points; i++) {
+                for (let i = 1; i < equityData.length; i++) {
                     ctx.lineTo(xs(i), ys(equityData[i].equity));
                 }
                 ctx.strokeStyle = '#00e676';
@@ -545,15 +508,16 @@
                 ctx.shadowBlur = 0;
 
                 // 终点
-                const lastX = xs(points);
-                const lastY = ys(equityData[points].equity);
+                const lastX = xs(equityData.length-1);
+                const lastY = ys(equityData[equityData.length-1].equity);
                 ctx.beginPath(); ctx.arc(lastX, lastY, 5, 0, Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
                 ctx.beginPath(); ctx.arc(lastX, lastY, 8, 0, Math.PI*2); ctx.fillStyle = 'rgba(0,230,118,0.35)'; ctx.fill();
                 ctx.beginPath(); ctx.arc(lastX, lastY, 3, 0, Math.PI*2); ctx.fillStyle = '#00e676'; ctx.fill();
 
+                // 悬停十字线
                 if (hx !== null && hx >= pad.left && hx <= W - pad.right) {
-                    const idx = Math.round((hx - pad.left) / pw * points);
-                    const clamped = Math.max(0, Math.min(points, idx));
+                    const idx = Math.round((hx - pad.left) / pw * (equityData.length - 1));
+                    const clamped = Math.max(0, Math.min(equityData.length-1, idx));
                     const cx = xs(clamped);
                     const cy = ys(equityData[clamped].equity);
                     ctx.setLineDash([3, 5]);
@@ -575,13 +539,14 @@
                 const pad = { left: 70, right: 30 };
                 const pw = W - pad.left - pad.right;
                 if (mx >= pad.left && mx <= W - pad.right) {
-                    const idx = Math.round((mx - pad.left) / pw * points);
-                    const clamped = Math.max(0, Math.min(points, idx));
+                    const idx = Math.round((mx - pad.left) / pw * (equityData.length - 1));
+                    const clamped = Math.max(0, Math.min(equityData.length-1, idx));
                     const d = equityData[clamped];
                     tooltip.style.display = 'block';
                     tooltip.style.left = (mx + 16) + 'px';
                     tooltip.style.top = (my - 40) + 'px';
-                    tooltip.innerHTML = `<strong>${(d.date.getMonth()+1)}/${d.date.getDate()}/${d.date.getFullYear()}</strong><br>净值: $${d.equity.toLocaleString('en-US',{minimumFractionDigits:2})}`;
+                    const dateStr = d.date ? d.date : '';
+                    tooltip.innerHTML = `<strong>${dateStr}</strong><br>净值: $${d.equity.toLocaleString('en-US',{minimumFractionDigits:2})}`;
                     draw(mx);
                 } else {
                     tooltip.style.display = 'none';
