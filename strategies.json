@@ -6,7 +6,7 @@
     "days": 1,
     "returnRate": "+945.54%",
     "drawdown": "0.00%",
-    "winRate": "41.1%",
+    "winRate": "0.0%",
     "page": "strategy1.html?data=strategy1-data.json"
   },
   {
@@ -16,7 +16,7 @@
     "days": 1,
     "returnRate": "-100.00%",
     "drawdown": "0.00%",
-    "winRate": "69.1%",
+    "winRate": "0.0%",
     "page": "strategy2.html?data=strategy2-data.json"
   }
 ]
