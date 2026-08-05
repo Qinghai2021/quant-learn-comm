@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>策略实盘记录</title>
+    <title>策略实盘学习记录</title>
     <style>
         :root {
-            --bg-primary: #0d0f14;
-            --bg-card: #1a1d28;
-            --border-color: #2a2d3a;
-            --gold: #d4a853;
-            --gold-light: #f0d078;
-            --text-primary: #e8e8ec;
-            --text-secondary: #a0a3b5;
-            --text-muted: #6b6e80;
-            --green: #00c853;
-            --green-bg: rgba(0,200,83,0.12);
-            --red: #ff3d4f;
-            --red-bg: rgba(255,61,79,0.12);
+            --bg-primary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e0e0e0;
+            --gold: #c5943e;
+            --gold-light: #e6b567;
+            --text-primary: #1e2235;
+            --text-secondary: #5a6072;
+            --text-muted: #7b8090;
+            --green: #00a854;
+            --green-bg: rgba(0,168,84,0.1);
+            --red: #e54545;
+            --red-bg: rgba(229,69,69,0.1);
             --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
             --font-sans: 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             --radius: 10px;
             --radius-lg: 14px;
-            --shadow-card: 0 2px 12px rgba(0,0,0,0.3);
+            --shadow-card: 0 2px 12px rgba(0,0,0,0.04);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -32,14 +32,11 @@
             min-height: 100vh;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
-            background-image:
-                radial-gradient(ellipse at 20% 20%, rgba(212,168,83,0.03) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(77,166,255,0.02) 0%, transparent 50%);
+            background-image: none;
         }
 
         .top-bar {
-            background: rgba(21,24,32,0.9);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
             border-bottom: 1px solid var(--border-color);
             padding: 14px 24px;
             display: flex;
@@ -47,6 +44,7 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
         .back-link {
             color: var(--gold);
@@ -72,22 +70,22 @@
             flex-wrap: wrap;
         }
         .days-badge {
-            background: rgba(212,168,83,0.1);
-            color: var(--gold-light);
+            background: rgba(197,148,62,0.1);
+            color: var(--gold);
             padding: 3px 12px;
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.78rem;
-            border: 1px solid rgba(212,168,83,0.25);
+            border: 1px solid rgba(197,148,62,0.3);
         }
         .version-badge {
-            background: rgba(77,166,255,0.1);
-            color: #4da6ff;
+            background: rgba(30,109,242,0.1);
+            color: #1e6df2;
             padding: 3px 10px;
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.75rem;
-            border: 1px solid rgba(77,166,255,0.3);
+            border: 1px solid rgba(30,109,242,0.3);
         }
 
         .main-container {
@@ -117,7 +115,7 @@
         .price-symbol { font-weight: 700; font-size: 1.1rem; color: var(--gold); letter-spacing: 1px; }
         .price-bid {
             font-size: 2rem; font-weight: 700; font-family: var(--font-mono);
-            color: #fff; letter-spacing: -0.5px;
+            color: var(--text-primary); letter-spacing: -0.5px;
         }
         .price-change {
             font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600;
@@ -130,7 +128,9 @@
             font-size: 0.7rem; color: var(--text-muted);
             text-transform: uppercase; letter-spacing: 0.8px;
         }
-        .price-details .val { font-family: var(--font-mono); color: var(--text-primary); font-weight: 500; }
+        .price-details .val {
+            font-family: var(--font-mono); color: var(--text-primary); font-weight: 500;
+        }
 
         .metrics-row {
             grid-column: 1 / -1;
@@ -146,7 +146,7 @@
             box-shadow: var(--shadow-card);
             transition: border-color 0.2s;
         }
-        .metric-card:hover { border-color: #3a3d50; }
+        .metric-card:hover { border-color: #c0c0c0; }
         .metric-label {
             font-size: 0.7rem; text-transform: uppercase;
             letter-spacing: 0.8px; color: var(--text-muted); font-weight: 600;
@@ -157,7 +157,7 @@
         }
         .metric-value.green { color: var(--green); }
         .metric-value.red { color: var(--red); }
-        .metric-value.gold { color: var(--gold-light); }
+        .metric-value.gold { color: var(--gold); }
         .metric-sub { font-size: 0.72rem; color: var(--text-secondary); font-weight: 400; }
 
         .chart-section {
@@ -170,15 +170,18 @@
             box-shadow: var(--shadow-card);
             display: flex; flex-direction: column;
         }
-        .chart-container { flex: 1; position: relative; min-height: 320px; }
+        .chart-container {
+            flex: 1; position: relative; min-height: 320px;
+            background: #fafbfc; /* 非常浅的背景 */
+        }
         .chart-container canvas { width: 100%; height: 100%; display: block; }
         .chart-tooltip {
             display: none; position: absolute;
-            background: #1f2235; border: 1px solid #3a3d55;
+            background: #ffffff; border: 1px solid #ddd;
             border-radius: 6px; padding: 8px 12px;
             font-family: var(--font-mono); font-size: 0.75rem;
-            color: #fff; pointer-events: none;
-            z-index: 10; box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            color: var(--text-primary); pointer-events: none;
+            z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .trade-log-section {
@@ -194,11 +197,11 @@
         }
         .trade-table-wrap {
             flex:1; overflow-y: auto;
-            scrollbar-width: thin; scrollbar-color: #2a2d3a transparent;
+            scrollbar-width: thin; scrollbar-color: #ccc transparent;
         }
         .trade-table-wrap::-webkit-scrollbar { width: 4px; }
         .trade-table-wrap::-webkit-scrollbar-track { background: transparent; }
-        .trade-table-wrap::-webkit-scrollbar-thumb { background: #2a2d3a; border-radius: 4px; }
+        .trade-table-wrap::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
         table.trade-table {
             width: 100%; border-collapse: collapse;
             font-size: 0.75rem; font-family: var(--font-mono);
@@ -210,16 +213,16 @@
             position: sticky; top: 0; background: var(--bg-card); z-index: 2;
         }
         table.trade-table td {
-            padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,0.03);
+            padding: 7px 10px; border-bottom: 1px solid rgba(0,0,0,0.05);
             color: var(--text-secondary); white-space: nowrap;
         }
-        table.trade-table tr:hover td { background: rgba(255,255,255,0.015); color: #fff; }
+        table.trade-table tr:hover td { background: #f8f9fc; color: var(--text-primary); }
         .trade-pnl { font-weight: 700; }
         .trade-pnl.win { color: var(--green); }
         .trade-pnl.loss { color: var(--red); }
         .trade-dir { font-weight: 700; letter-spacing: 0.3px; }
-        .trade-dir.long { color: #00e676; }
-        .trade-dir.short { color: #ff5252; }
+        .trade-dir.long { color: #00873e; }
+        .trade-dir.short { color: #c62828; }
 
         .card-header { margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
         .card-title {
@@ -275,7 +278,6 @@
             <div class="price-details">
                 <span><span class="label">最高</span><span class="val" id="highDisplay">--</span></span>
                 <span><span class="label">最低</span><span class="val" id="lowDisplay">--</span></span>
-                <span><span class="label">点差</span><span class="val" id="spreadDisplay">--</span></span>
             </div>
         </div>
 
@@ -305,7 +307,7 @@
         <div class="chart-section">
             <div class="card-header">
                 <span class="card-title">📈 资金曲线 (全周期)</span>
-                <span class="card-badge">实盘+回测</span>
+                <span class="card-badge">实盘</span>
             </div>
             <div class="chart-container" id="chartContainer">
                 <canvas id="equityCanvas"></canvas>
@@ -340,13 +342,11 @@
             ];
 
             let response = null;
-            let usedPath = '';
             for (const path of pathsToTry) {
                 try {
                     const resp = await fetch(path);
                     if (resp.ok) {
                         response = resp;
-                        usedPath = path;
                         break;
                     }
                 } catch (e) {}
@@ -359,14 +359,11 @@
                         数据加载失败，尝试路径：<br>${pathsToTry.join('<br>')}<br><br>
                         请检查 JSON 文件是否存在及路径是否正确。
                     </td></tr>`;
-                console.error('所有JSON路径加载失败:', pathsToTry);
                 return;
             }
 
             const data = await response.json();
-            console.log(`数据加载成功 (${usedPath})`, data);
 
-            // 渲染页面
             document.title = data.symbol ? `${data.symbol} · 实盘记录` : '策略实盘记录';
             document.getElementById('strategyName').textContent = `Aurora Gold · ${data.symbol || 'XAUUSD'} 趋势跟踪`;
             document.getElementById('daysBadge').textContent = `🗓️ 实盘 ${data.days || '--'} 天`;
@@ -410,8 +407,6 @@
 
             if (data.equityCurve && data.equityCurve.data && data.equityCurve.data.length > 0) {
                 initChart(data.equityCurve);
-            } else {
-                console.warn('资金曲线数据为空或不存在');
             }
         })();
 
@@ -460,11 +455,11 @@
 
                 ctx.clearRect(0, 0, W, H);
 
-                // 网格
-                ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+                // 网格线 (浅灰)
+                ctx.strokeStyle = '#e9ecf1';
                 ctx.lineWidth = 0.8;
                 const gridLines = 6;
-                ctx.fillStyle = '#6b6e80';
+                ctx.fillStyle = '#7b8090';
                 ctx.font = '10px "SF Mono", "Consolas", monospace';
                 ctx.textAlign = 'right';
                 for (let g = 0; g <= gridLines; g++) {
@@ -480,7 +475,7 @@
                 // X轴日期
                 const step = Math.floor(equityData.length / 5);
                 const xLabelIndices = [0, step, step*2, step*3, equityData.length-1];
-                ctx.fillStyle = '#6b6e80';
+                ctx.fillStyle = '#7b8090';
                 ctx.font = '9px "SF Mono", "Consolas", monospace';
                 ctx.textAlign = 'center';
                 xLabelIndices.forEach(i => {
@@ -495,23 +490,23 @@
                 // 初始资金线
                 const initY = ys(initial);
                 ctx.setLineDash([4, 8]);
-                ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                ctx.strokeStyle = '#c0c5ce';
                 ctx.lineWidth = 0.7;
                 ctx.beginPath();
                 ctx.moveTo(pad.left, initY);
                 ctx.lineTo(W - pad.right, initY);
                 ctx.stroke();
                 ctx.setLineDash([]);
-                ctx.fillStyle = '#6b6e80';
+                ctx.fillStyle = '#7b8090';
                 ctx.font = '9px "SF Mono", "Consolas", monospace';
                 ctx.textAlign = 'left';
                 ctx.fillText('初始 $' + initial.toLocaleString(), W - pad.right - 70, initY - 6);
 
-                // 渐变
+                // 渐变填充
                 const gradient = ctx.createLinearGradient(0, pad.top, 0, pad.top + ph);
-                gradient.addColorStop(0, 'rgba(0,200,83,0.22)');
-                gradient.addColorStop(0.5, 'rgba(0,200,83,0.06)');
-                gradient.addColorStop(1, 'rgba(0,200,83,0.0)');
+                gradient.addColorStop(0, 'rgba(0,168,84,0.15)');
+                gradient.addColorStop(0.5, 'rgba(0,168,84,0.04)');
+                gradient.addColorStop(1, 'rgba(0,168,84,0.0)');
                 ctx.beginPath();
                 ctx.moveTo(xs(0), ys(equityData[0].equity));
                 for (let i = 1; i < equityData.length; i++) {
@@ -529,9 +524,9 @@
                 for (let i = 1; i < equityData.length; i++) {
                     ctx.lineTo(xs(i), ys(equityData[i].equity));
                 }
-                ctx.strokeStyle = '#00e676';
+                ctx.strokeStyle = '#00a854';
                 ctx.lineWidth = 2.2;
-                ctx.shadowColor = 'rgba(0,230,118,0.5)';
+                ctx.shadowColor = 'rgba(0,168,84,0.3)';
                 ctx.shadowBlur = 8;
                 ctx.stroke();
                 ctx.shadowBlur = 0;
@@ -540,8 +535,8 @@
                 const lastX = xs(equityData.length-1);
                 const lastY = ys(equityData[equityData.length-1].equity);
                 ctx.beginPath(); ctx.arc(lastX, lastY, 5, 0, Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
-                ctx.beginPath(); ctx.arc(lastX, lastY, 8, 0, Math.PI*2); ctx.fillStyle = 'rgba(0,230,118,0.35)'; ctx.fill();
-                ctx.beginPath(); ctx.arc(lastX, lastY, 3, 0, Math.PI*2); ctx.fillStyle = '#00e676'; ctx.fill();
+                ctx.strokeStyle = '#00a854'; ctx.lineWidth = 2; ctx.stroke();
+                ctx.beginPath(); ctx.arc(lastX, lastY, 8, 0, Math.PI*2); ctx.fillStyle = 'rgba(0,168,84,0.2)'; ctx.fill();
 
                 // 悬停十字线
                 if (hx !== null && hx >= pad.left && hx <= W - pad.right) {
@@ -550,13 +545,13 @@
                     const cx = xs(clamped);
                     const cy = ys(equityData[clamped].equity);
                     ctx.setLineDash([3, 5]);
-                    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+                    ctx.strokeStyle = '#7b8090';
                     ctx.lineWidth = 0.8;
                     ctx.beginPath(); ctx.moveTo(cx, pad.top); ctx.lineTo(cx, pad.top+ph); ctx.stroke();
                     ctx.beginPath(); ctx.moveTo(pad.left, cy); ctx.lineTo(W-pad.right, cy); ctx.stroke();
                     ctx.setLineDash([]);
-                    ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI*2); ctx.fillStyle = '#fff'; ctx.fill();
-                    ctx.strokeStyle = '#00e676'; ctx.lineWidth = 2; ctx.stroke();
+                    ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI*2); ctx.fillStyle = '#00a854'; ctx.fill();
+                    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
                 }
                 ctx.restore();
             }

@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>量化策略实盘记录 | 主页</title>
+    <title>量化策略实盘学习记录分享 | 主页</title>
     <style>
         :root {
-            --bg-primary: #0d0f14;
-            --bg-card: #1a1d28;
-            --border-color: #2a2d3a;
-            --gold: #d4a853;
-            --gold-light: #f0d078;
-            --text-primary: #e8e8ec;
-            --text-secondary: #a0a3b5;
-            --text-muted: #6b6e80;
-            --green: #00c853;
-            --red: #ff3d4f;
+            --bg-primary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e0e0e0;
+            --gold: #c5943e;
+            --gold-light: #e6b567;
+            --text-primary: #1e2235;
+            --text-secondary: #5a6072;
+            --text-muted: #7b8090;
+            --green: #00a854;
+            --red: #e54545;
             --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
             --font-sans: 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             --radius-lg: 14px;
-            --shadow-card: 0 4px 20px rgba(0,0,0,0.4);
+            --shadow-card: 0 4px 12px rgba(0,0,0,0.06);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -27,16 +27,14 @@
             color: var(--text-primary);
             font-family: var(--font-sans);
             min-height: 100vh;
-            background-image:
-                radial-gradient(ellipse at 30% 10%, rgba(212,168,83,0.04) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 90%, rgba(77,166,255,0.03) 0%, transparent 50%);
+            background-image: none;
         }
         .header {
-            background: rgba(21,24,32,0.8);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
             border-bottom: 1px solid var(--border-color);
             padding: 20px 40px;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
         .header h1 {
             font-size: 2rem;
@@ -89,14 +87,14 @@
             display: inline-block;
             font-size: 0.72rem;
             font-weight: 600;
-            color: var(--gold-light);
-            background: rgba(212,168,83,0.1);
+            color: var(--gold);
+            background: rgba(197,148,62,0.1);
             padding: 2px 10px;
             border-radius: 20px;
             margin-bottom: 18px;
             width: fit-content;
             letter-spacing: 0.5px;
-            border: 1px solid rgba(212,168,83,0.25);
+            border: 1px solid rgba(197,148,62,0.25);
         }
         .stats-grid {
             display: grid;
@@ -106,7 +104,7 @@
         }
         .stat-item { display: flex; flex-direction: column; align-items: center; }
         .stat-label {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             color: var(--text-muted);
@@ -125,7 +123,7 @@
             text-align: center;
             padding: 10px 0;
             border-radius: 8px;
-            background: rgba(212,168,83,0.1);
+            background: rgba(197,148,62,0.1);
             border: 1px solid var(--gold);
             color: var(--gold);
             font-weight: 600;
@@ -135,7 +133,7 @@
             transition: background 0.2s;
             margin-top: auto;
         }
-        .view-btn:hover { background: rgba(212,168,83,0.2); }
+        .view-btn:hover { background: rgba(197,148,62,0.2); }
         .footer {
             text-align: center;
             padding: 30px;
@@ -154,7 +152,7 @@
 </head>
 <body>
     <header class="header">
-        <h1>📊 量化策略实盘记录</h1>
+        <h1>量化策略实盘记录</h1>
         <p>多策略组合 · 透明化净值追踪</p>
     </header>
 
