@@ -1,0 +1,76 @@
+{
+  "symbol": "EURUSD",
+  "price": 1.15333,
+  "change": "+0.02%",
+  "high": 1.15336,
+  "low": 1.15017,
+  "spread": 0.00032999999999994145,
+  "equity": 0.0,
+  "initialCapital": 10000.0,
+  "totalReturn": "-100.00%",
+  "annualReturn": "-100.0%",
+  "winRate": "69.2%",
+  "wins": 1549,
+  "losses": 689,
+  "sharpe": "0.00",
+  "sortino": "N/A",
+  "maxDrawdown": "0.00%",
+  "recoveryDays": 14,
+  "days": 1,
+  "snapshotDate": "2026-08-05",
+  "trades": [
+    {
+      "time": "05-29 06:48",
+      "direction": "short",
+      "lots": 0.0,
+      "open": 0.0,
+      "close": 0.0,
+      "pnl": -4.06
+    },
+    {
+      "time": "05-19 16:31",
+      "direction": "short",
+      "lots": 0.03,
+      "open": 4474.64,
+      "close": 4474.64,
+      "pnl": -57.24
+    },
+    {
+      "time": "05-19 16:31",
+      "direction": "short",
+      "lots": 0.06,
+      "open": 4479.8,
+      "close": 4479.8,
+      "pnl": -189.84
+    },
+    {
+      "time": "05-19 16:31",
+      "direction": "short",
+      "lots": 0.06,
+      "open": 4479.33,
+      "close": 4479.33,
+      "pnl": -171.24
+    },
+    {
+      "time": "05-19 16:31",
+      "direction": "short",
+      "lots": 0.03,
+      "open": 4478.7,
+      "close": 4478.7,
+      "pnl": -98.13
+    }
+  ],
+  "equityCurve": {
+    "startDate": "2026-08-05",
+    "endDate": "2026-08-05",
+    "points": 1,
+    "initial": 0.0,
+    "final": 0.0,
+    "data": [
+      {
+        "date": "2026-08-05",
+        "equity": 0.0
+      }
+    ]
+  }
+}
