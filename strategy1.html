@@ -135,7 +135,7 @@
         .metrics-row {
             grid-column: 1 / -1;
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 14px;
         }
         .metric-card {
@@ -239,7 +239,7 @@
 
         @media (max-width: 1200px) {
             .main-container { grid-template-columns: 1fr 1fr; }
-            .metrics-row { grid-template-columns: repeat(3,1fr); }
+            .metrics-row { grid-template-columns: repeat(2, 1fr); }
             .chart-section { grid-column: 1 / -1; }
             .trade-log-section { grid-column: 1 / -1; }
         }
@@ -288,17 +288,12 @@
             <div class="metric-card">
                 <div class="metric-label">总收益率</div>
                 <div class="metric-value green" id="totalReturnDisplay">--</div>
-                <div class="metric-sub" id="annualReturnDisplay">年化 --</div>
+                <div class="metric-sub">全周期表现</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">胜率</div>
                 <div class="metric-value green" id="winRateDisplay">--</div>
                 <div class="metric-sub" id="winLossDisplay">--赢 / --亏</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">夏普比率</div>
-                <div class="metric-value green" id="sharpeDisplay">--</div>
-                <div class="metric-sub" id="sortinoDisplay">索提诺 --</div>
             </div>
             <div class="metric-card">
                 <div class="metric-label">最大回撤</div>
@@ -388,11 +383,8 @@
             document.getElementById('equityDisplay').textContent = data.equity ? '$' + data.equity.toLocaleString('en-US', {minimumFractionDigits:2}) : '--';
             document.getElementById('initialCapitalDisplay').textContent = `初始 $${(data.initialCapital || 0).toLocaleString()}`;
             document.getElementById('totalReturnDisplay').textContent = data.totalReturn || '--';
-            document.getElementById('annualReturnDisplay').textContent = `年化 ${data.annualReturn || '--'}`;
             document.getElementById('winRateDisplay').textContent = data.winRate || '--';
             document.getElementById('winLossDisplay').textContent = `${data.wins || 0}赢 / ${data.losses || 0}亏`;
-            document.getElementById('sharpeDisplay').textContent = data.sharpe || '--';
-            document.getElementById('sortinoDisplay').textContent = `索提诺 ${data.sortino || '--'}`;
             document.getElementById('drawdownDisplay').textContent = data.maxDrawdown || '--';
             document.getElementById('recoveryDisplay').textContent = `恢复天数 ${data.recoveryDays || '--'}`;
 

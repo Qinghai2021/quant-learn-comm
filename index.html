@@ -100,11 +100,11 @@
         }
         .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-bottom: 20px;
         }
-        .stat-item { display: flex; flex-direction: column; }
+        .stat-item { display: flex; flex-direction: column; align-items: center; }
         .stat-label {
             font-size: 0.65rem;
             text-transform: uppercase;
@@ -191,10 +191,6 @@
                                 <span class="stat-value green">${s.returnRate}</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-label">夏普比率</span>
-                                <span class="stat-value green">${s.sharpe}</span>
-                            </div>
-                            <div class="stat-item">
                                 <span class="stat-label">最大回撤</span>
                                 <span class="stat-value red">${s.drawdown}</span>
                             </div>
@@ -208,7 +204,6 @@
                     container.appendChild(card);
                 });
 
-                // 尝试从第一个策略的快照日期获取更新日期（可在strategies.json中添加updateDate字段）
                 updateDateSpan.textContent = new Date().toISOString().split('T')[0];
             } catch (error) {
                 container.innerHTML = '<div class="loading-message">策略数据加载失败，请检查 strategies.json 文件</div>';
