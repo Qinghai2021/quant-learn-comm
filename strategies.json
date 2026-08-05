@@ -5,20 +5,18 @@
     "description": "趋势跟踪 · 黄金1小时周期 · 多因子共振",
     "days": 1,
     "returnRate": "+945.54%",
-    "sharpe": "0.00",
     "drawdown": "0.00%",
-    "winRate": "41.2%",
+    "winRate": "41.1%",
     "page": "strategy1.html?data=strategy1-data.json"
   },
   {
     "id": "strategy2",
     "name": "Grid Master",
-    "description": "网格交易 · EURUSD 30分钟 · 低波动套利",
+    "description": "网格交易 · XAUUSD 30分钟 · 低波动套利",
     "days": 1,
     "returnRate": "-100.00%",
-    "sharpe": "0.00",
     "drawdown": "0.00%",
-    "winRate": "69.2%",
+    "winRate": "69.1%",
     "page": "strategy2.html?data=strategy2-data.json"
   }
 ]
